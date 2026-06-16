@@ -98,6 +98,9 @@ Integration tests auto-skip when the stack is unreachable. Configure with
 
 ## Publishing
 
-1. Bump `src/mona/_version.py`.
-2. Create a GitHub release tagged `v0.1.0-preview` (triggers `.github/workflows/publish.yml`), or run `just publish` locally with `UV_PUBLISH_TOKEN` set.
+GitHub release tags (e.g. `v0.1.0-preview`) and the PyPI version in `src/mona/_version.py`
+(e.g. `0.1.0`) are set independently — preview tags on GitHub, semver on PyPI.
+
+1. Bump `src/mona/_version.py` (PyPI version).
+2. Create a GitHub release with a preview tag (e.g. `v0.1.0-preview`), or run `just publish` locally with `UV_PUBLISH_TOKEN` set.
 3. On [PyPI](https://pypi.org/), add a trusted publisher for `mona-preview` pointing at `rchowell/mona-python` (recommended over long-lived API tokens).
