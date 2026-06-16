@@ -30,6 +30,3 @@ jobs:
 
       - name: Publish to PyPI
         run: uv publish
-        env:
-          # Fallback for first publish before trusted publishing is configured.
-          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
