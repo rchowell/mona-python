@@ -50,7 +50,7 @@ async def test_query_async_data_plane() -> None:
         ),
     )
     async with make_client(query_base_url="https://edge.test") as client:
-        result = await client.databases.query("my-app", "SELECT 42")
+        result = await client.database("my-app").query("SELECT 42")
     assert isinstance(result, Result)
     assert result.rows == [42]
     assert result.rows_affected == 1

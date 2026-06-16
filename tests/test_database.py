@@ -223,21 +223,6 @@ def test_metadata_exists_and_schema_helpers() -> None:
 
 
 @respx.mock
-def test_query_wrapper_delegates_to_handle() -> None:
-    respx.post(f"{BASE}/v1/databases/my-app").mock(
-        return_value=httpx.Response(
-            200,
-            json={"results": [{"rows": [{"x": 1}], "rows_affected": 0}]},
-        ),
-    )
-    with make_client() as client:
-        result = client.databases.query("my-app", "select {x: 1};")
-
-    assert isinstance(result, Result)
-    assert result.rows == [{"x": 1}]
-
-
-@respx.mock
 async def test_async_database_execute_and_fetchall() -> None:
     respx.post(f"{BASE}/v1/databases/my-app").mock(
         return_value=httpx.Response(

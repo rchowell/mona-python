@@ -11,7 +11,7 @@ from mona._models import AsyncDatabasePage, DatabasePage
 if TYPE_CHECKING:
     from mona._client import AsyncClient, Client
     from mona._models import Database as DatabaseRecord
-    from mona._models import ResolveDatabaseInstanceResponse, Result
+    from mona._models import ResolveDatabaseInstanceResponse
 
 
 class DatabasesResource:
@@ -117,16 +117,6 @@ class DatabasesResource:
         op = replace(ep.op, timeout=timeout) if timeout is not None else ep.op
         return ep.parse(self._client._send(op))
 
-    def query(
-        self,
-        database: str,
-        sql: str,
-        *,
-        timeout: float | None = None,
-    ) -> Result:
-        """Execute a single statement and return its result."""
-        return self._client.database(database).query(sql, timeout=timeout)
-
 
 class AsyncDatabasesResource:
     """Asynchronous database management operations."""
@@ -203,13 +193,3 @@ class AsyncDatabasesResource:
         ep = _ops.resolve_database_instance(database)
         op = replace(ep.op, timeout=timeout) if timeout is not None else ep.op
         return ep.parse(await self._client._send(op))
-
-    async def query(
-        self,
-        database: str,
-        sql: str,
-        *,
-        timeout: float | None = None,
-    ) -> Result:
-        """Execute a single statement and return its result."""
-        return await self._client.database(database).query(sql, timeout=timeout)

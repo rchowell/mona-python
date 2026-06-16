@@ -42,7 +42,7 @@ def test_get_missing_database_raises_not_found(client: Client) -> None:
 
 
 def test_query_executes_select(client: Client, database: str) -> None:
-    result = client.databases.query(database, "select {x: 1};")
+    result = client.database(database).query("select {x: 1};")
     assert isinstance(result, Result)
     assert result.rows[0] == {"x": 1}
 
@@ -53,11 +53,12 @@ def test_query_executes_select(client: Client, database: str) -> None:
     strict=False,
 )
 def test_query_roundtrip_create_insert_select(client: Client, database: str) -> None:
-    client.databases.query(database, "create table items (id int, name string);")
-    insert = client.databases.query(database, 'insert into items ({id: 1, name: "alpha"});')
+    db = client.database(database)
+    db.execute("create table items (id int, name string);")
+    insert = db.insert("items", {"id": 1, "name": "alpha"})
     assert insert.rows_affected == 1
 
-    selected = client.databases.query(database, "select * from items;")
+    selected = db.query("select * from items;")
     assert selected.rows[0] == {"id": 1, "name": "alpha"}
 
 
@@ -66,7 +67,7 @@ async def test_async_lifecycle_and_query(async_client: AsyncClient, database_nam
         created = await client.databases.create(name=database_name)
         assert created.name == database_name
         try:
-            result = await client.databases.query(database_name, "select {x: 1};")
+            result = await client.database(database_name).query("select {x: 1};")
             assert result.rows[0] == {"x": 1}
         finally:
             await client.databases.delete(database_name)

@@ -102,7 +102,7 @@ def test_query_hits_data_plane_and_parses_rows() -> None:
         ),
     )
     with make_client() as client:
-        result = client.databases.query("my-app", "SELECT 1")
+        result = client.database("my-app").query("SELECT 1")
 
     assert isinstance(result, Result)
     assert result.rows == [1]
@@ -116,7 +116,7 @@ def test_query_uses_query_base_url_override() -> None:
         return_value=httpx.Response(200, json={"results": [{"rows": [], "rows_affected": 0}]}),
     )
     with make_client(query_base_url="https://edge.test") as client:
-        result = client.databases.query("my-app", "SELECT 1")
+        result = client.database("my-app").query("SELECT 1")
     assert result.rows == []
 
 
